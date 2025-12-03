@@ -8,7 +8,9 @@ Parser needed to implement FAME-ML
 import ast 
 import os 
 import constants 
+import logging
 
+logger = logging.getLogger(__name__)
 
 def checkLoggingPerData(tree_object, name2track):
     '''
@@ -77,13 +79,29 @@ def checkAttribFuncsInExcept(expr_obj):
                 attrib_list = attrib_list + commonAttribCallBody( func_node )
     return attrib_list 
 
-def getPythonParseObject( pyFile ): 
-	try:
-		full_tree = ast.parse( open( pyFile ).read())    
-	except SyntaxError:
-		# print(constants.PARSING_ERROR_KW, pyFile )
-		full_tree = ast.parse(constants.EMPTY_STRING) 
-	return full_tree 
+def getPythonParseObject(pyFile):
+    """
+    Parse a Python file into an AST.
+
+    Forensics logging:
+    - Logs when parsing starts and completes.
+    - Logs and re-raises SyntaxError / FileNotFoundError so crashes are visible
+      to both fuzzing and forensic logs.
+    """
+    logger.info("getPythonParseObject called", extra={"py_file": pyFile})
+    try:
+        with open(pyFile, encoding="utf-8", errors="ignore") as fh:
+            source = fh.read()
+        full_tree = ast.parse(source)
+        logger.info("Successfully parsed Python file", extra={"py_file": pyFile})
+    except FileNotFoundError:
+        logger.exception("File not found while parsing Python file", extra={"py_file": pyFile})
+        raise
+    except SyntaxError:
+        logger.exception("Syntax error while parsing Python file", extra={"py_file": pyFile})
+        full_tree = ast.parse(constants.EMPTY_STRING)
+    return full_tree
+
 
 def commonAttribCallBody(node_):
     full_list = []
