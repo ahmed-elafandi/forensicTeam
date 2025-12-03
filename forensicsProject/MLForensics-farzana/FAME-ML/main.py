@@ -12,6 +12,9 @@ import os
 import pandas as pd
 import py_parser 
 import numpy as np 
+import logging
+
+logger = logging.getLogger(__name__)
 
 
 def giveTimeStamp():
@@ -168,6 +171,20 @@ def runFameML(inp_dir, csv_fil):
 
 
 if __name__=='__main__':
+	    # ----------------- Forensics Logging Setup -----------------
+    import logging
+
+    logging.basicConfig(
+        filename='forensics.log',
+        filemode='a',
+        level=logging.INFO,
+        format='%(asctime)s [%(levelname)s] %(name)s:%(lineno)d %(message)s',
+    )
+
+    logger = logging.getLogger(__name__)
+    logger.info("MLForensics script started")
+    # ------------------------------------------------------------
+
 	command_line_flag = False ## after acceptance   
 
 	t1 = time.time()
