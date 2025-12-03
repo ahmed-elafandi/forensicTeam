@@ -11,6 +11,10 @@ jobs:
   fuzz-and-log:
     runs-on: ubuntu-latest
 
+    defaults:
+      run:
+        working-directory: forensicsProject/MLForensics-farzana
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -20,14 +24,16 @@ jobs:
         with:
           python-version: '3.11'
 
-      # Run fuzz.py from the same folder you use locally:
-      # forensicsProject/fuzz.py
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install pandas numpy
+
       - name: Run fuzzing (fuzz.py)
-        working-directory: forensicsProject
-        run: python fuzz.py
+        run: |
+          python fuzz.py
 
       - name: Show fuzz_crashes.log (if it exists)
-        working-directory: forensicsProject
         run: |
           if [ -f fuzz_crashes.log ]; then
             echo "=== fuzz_crashes.log ==="
