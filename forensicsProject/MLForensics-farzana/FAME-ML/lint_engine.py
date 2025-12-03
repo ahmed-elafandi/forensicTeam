@@ -7,127 +7,137 @@ Executes the pattern matching and data flow analysis
 
 import py_parser
 import constants 
+import logging
 
-def getDataLoadCount( py_file ):
-    data_load_count = 0 
+logger = logging.getLogger(__name__)
+
+def getDataLoadCount(py_file):
+    """
+    Count data-loading related API calls in a Python file.
+
+    Forensics logging:
+    - Logs when analysis starts and finishes.
+    - Logs the final count of detected data-load operations.
+    """
+    logger.info("getDataLoadCount called", extra={"py_file": py_file})
+
+    data_load_count = 0
     py_tree = py_parser.getPythonParseObject(py_file)
-    func_def_list  = py_parser.getPythonAtrributeFuncs( py_tree ) 
+    func_def_list = py_parser.getPythonAtrributeFuncs(py_tree)
 
     for def_ in func_def_list:
-        class_name, func_name, func_line, arg_call_list = def_ 
-        
-        if(( class_name == constants.TORCH_KW ) and (func_name == constants.LOAD_KW ) ):
-            data_load_count += 1 
-            print( constants.CONSOLE_STR_DISPLAY.format( constants.CONSOLE_STR_DATA_LOAD, func_line , py_file  ) )
-            
-        elif(( class_name == constants.DATA_KW ) and (func_name == constants.LOAD_KW ) ):
-            data_load_count += 1 
-            print( constants.CONSOLE_STR_DISPLAY.format( constants.CONSOLE_STR_DATA_LOAD, func_line , py_file  ) )
-            
-        elif(( class_name == constants.PICKLE_KW ) and (func_name == constants.LOAD_KW ) ):
-            data_load_count += 1 
-            print( constants.CONSOLE_STR_DISPLAY.format( constants.CONSOLE_STR_DATA_LOAD, func_line , py_file  ) )
-            
-        elif(( class_name == constants.JSON_KW ) and (func_name == constants.LOAD_KW ) ):
-            data_load_count += 1 
-            print( constants.CONSOLE_STR_DISPLAY.format( constants.CONSOLE_STR_DATA_LOAD, func_line , py_file  ) )
-            
-        elif(( class_name == constants.NP_KW ) and (func_name == constants.LOAD_KW ) ):
-            data_load_count += 1 
-            print( constants.CONSOLE_STR_DISPLAY.format( constants.CONSOLE_STR_DATA_LOAD, func_line , py_file  ) )
-            
-        elif(( class_name == constants.LATEST_BLOB_KW ) and (func_name == constants.DOWNLOAD_TO_FILENAME_KW ) ):
-            data_load_count += 1 
-            print( constants.CONSOLE_STR_DISPLAY.format( constants.CONSOLE_STR_DATA_LOAD, func_line , py_file  ) )
-            
-        elif(( class_name == constants.BLOB_KW ) and (func_name == constants.UPLOAD_FROM_FILENAME_KW ) ):
-            data_load_count += 1 
-            print( constants.CONSOLE_STR_DISPLAY.format( constants.CONSOLE_STR_DATA_LOAD, func_line , py_file  ) )
-            
-        # # skipping as per https://github.com/paser-group/MLForensics/blob/farzana/Verb.Object.Mapping.md 
-        # elif(( class_name == constants.VISDOM_LOGGER_KW ) and (func_name == constants.LOAD_PREVIOUS_VALUES_KW ) ):
-        #     data_load_count += 1 
-        #     # print(def_)
-            
-        elif(( class_name == constants.COCO_GT_KW ) and (func_name == constants.LOADRES_KW ) ):
-            data_load_count += 1 
-            print( constants.CONSOLE_STR_DISPLAY.format( constants.CONSOLE_STR_DATA_LOAD, func_line , py_file  ) )
-            
-        elif(( class_name == constants.YAML_KW ) and (func_name == constants.LOAD_KW ) ):
-            data_load_count += 1 
-            print( constants.CONSOLE_STR_DISPLAY.format( constants.CONSOLE_STR_DATA_LOAD, func_line , py_file  ) )
-            
-        elif(( class_name == constants.HUB_KW ) and (func_name == constants.LOAD_KW ) ):
-            data_load_count += 1 
-            print( constants.CONSOLE_STR_DISPLAY.format( constants.CONSOLE_STR_DATA_LOAD, func_line , py_file  ) )
-            
-        elif(( class_name == constants.DATA_LOADER_FACTORY_KW ) and (func_name == constants.GET_DATA_LOADER_KW ) ):
-            data_load_count += 1 
-            print( constants.CONSOLE_STR_DISPLAY.format( constants.CONSOLE_STR_DATA_LOAD, func_line , py_file  ) )
-            
-        elif(( class_name == constants.IO_KW ) and (func_name == constants.READ_FILE_KW ) ):
-            data_load_count += 1 
-            print( constants.CONSOLE_STR_DISPLAY.format( constants.CONSOLE_STR_DATA_LOAD, func_line , py_file  ) )
-            
-        elif(( class_name == constants.DATASET_KW ) and (func_name == constants.TENSOR_SLICE_KW ) ):
-            data_load_count += 1 
-            print( constants.CONSOLE_STR_DISPLAY.format( constants.CONSOLE_STR_DATA_LOAD, func_line , py_file  ) )
-            
-        elif(( class_name == constants.SP_MODEL_KW ) and (func_name == constants.LOAD_CAPITAL_KW) ):
-            data_load_count += 1 
-            print( constants.CONSOLE_STR_DISPLAY.format( constants.CONSOLE_STR_DATA_LOAD, func_line , py_file  ) )
-            
-        elif(( class_name == constants.TAGGING_DATA_LOADER_KW ) and (func_name == constants.LOAD_KW ) ):
-            data_load_count += 1 
-            print( constants.CONSOLE_STR_DISPLAY.format( constants.CONSOLE_STR_DATA_LOAD, func_line , py_file  ) )
-            
-        elif(( class_name == constants.PD_KW ) and (func_name == constants.READ_CSV_KW ) ):
-            data_load_count += 1 
-            print( constants.CONSOLE_STR_DISPLAY.format( constants.CONSOLE_STR_DATA_LOAD, func_line , py_file  ) )
-            
-        # # skipping as per https://github.com/paser-group/MLForensics/blob/farzana/Verb.Object.Mapping.md
-        # elif(( class_name == constants.FILES_KW ) and (func_name == constants.LOAD_FILES_LIST_KW ) ):
-        #     data_load_count += 1 
-            
-        elif(( class_name == constants.IBROSA_KW ) and (func_name == constants.LOAD_KW ) ):
-            data_load_count += 1 
-            print( constants.CONSOLE_STR_DISPLAY.format( constants.CONSOLE_STR_DATA_LOAD, func_line , py_file  ) )
-            
-        elif(( class_name == constants.DATA_UTILS_KW ) and (func_name == constants.LOAD_CELEBA_KW ) ):
-            data_load_count += 1 
-            print( constants.CONSOLE_STR_DISPLAY.format( constants.CONSOLE_STR_DATA_LOAD, func_line , py_file  ) )
-            
-        elif(( class_name == constants.DSET_KW ) and (func_name == constants.MNIST_KW ) ):
-            data_load_count += 1 
-            print( constants.CONSOLE_STR_DISPLAY.format( constants.CONSOLE_STR_DATA_LOAD, func_line , py_file  ) )
-            
-        elif(( class_name == constants.TARFILE_KW ) and (func_name == constants.OPEN_KW ) ):
-            data_load_count += 1 
-            print( constants.CONSOLE_STR_DISPLAY.format( constants.CONSOLE_STR_DATA_LOAD, func_line , py_file  ) )
-            
-        elif(( class_name == constants.AUDIO_KW ) and (func_name == constants.LOAD_WAV_KW ) ):
-            data_load_count += 1 
-            print( constants.CONSOLE_STR_DISPLAY.format( constants.CONSOLE_STR_DATA_LOAD, func_line , py_file  ) )
-            
-        elif(( class_name == constants.IMAGE_KW) and (func_name == constants.OPEN_KW ) ):
-            data_load_count += 1 
-            print( constants.CONSOLE_STR_DISPLAY.format( constants.CONSOLE_STR_DATA_LOAD, func_line , py_file  ) )
-                    
-        elif(( class_name == constants.REPLAY_BUFFER_KW ) and (func_name == constants.LOAD_KW ) ):
-            data_load_count += 1 
-            print( constants.CONSOLE_STR_DISPLAY.format( constants.CONSOLE_STR_DATA_LOAD, func_line , py_file  ) )
-            
-        elif(( class_name == constants.H5PY_KW ) and (func_name == constants.FILE_KW ) ):
-            data_load_count += 1 
-            print( constants.CONSOLE_STR_DISPLAY.format( constants.CONSOLE_STR_DATA_LOAD, func_line , py_file  ) )
+        class_name, func_name, func_line, arg_call_list = def_
 
-    # LOGGING_IS_ON_FLAG = py_parser.checkLogging( py_tree,  func_def_list, 'akond' )
-    # this will be used to check if the file_name passed in as file to read, is logged  
-    LOGGING_IS_ON_FLAG = py_parser.checkLoggingPerData( py_tree, constants.DUMMY_LOG_KW ) 
-    # print(LOGGING_IS_ON_FLAG, data_load_count) 
-    return data_load_count 
-    
-    
+        if ((class_name == constants.TORCH_KW) and (func_name == constants.LOAD_KW)):
+            data_load_count += 1
+            print(constants.CONSOLE_STR_DISPLAY.format(constants.CONSOLE_STR_DATA_LOAD, func_line, py_file))
+
+        elif ((class_name == constants.DATA_KW) and (func_name == constants.LOAD_KW)):
+            data_load_count += 1
+            print(constants.CONSOLE_STR_DISPLAY.format(constants.CONSOLE_STR_DATA_LOAD, func_line, py_file))
+
+        elif ((class_name == constants.PICKLE_KW) and (func_name == constants.LOAD_KW)):
+            data_load_count += 1
+            print(constants.CONSOLE_STR_DISPLAY.format(constants.CONSOLE_STR_DATA_LOAD, func_line, py_file))
+
+        elif ((class_name == constants.JSON_KW) and (func_name == constants.LOAD_KW)):
+            data_load_count += 1
+            print(constants.CONSOLE_STR_DISPLAY.format(constants.CONSOLE_STR_DATA_LOAD, func_line, py_file))
+
+        elif ((class_name == constants.NP_KW) and (func_name == constants.LOAD_KW)):
+            data_load_count += 1
+            print(constants.CONSOLE_STR_DISPLAY.format(constants.CONSOLE_STR_DATA_LOAD, func_line, py_file))
+
+        elif ((class_name == constants.LATEST_BLOB_KW) and (func_name == constants.DOWNLOAD_TO_FILENAME_KW)):
+            data_load_count += 1
+            print(constants.CONSOLE_STR_DISPLAY.format(constants.CONSOLE_STR_DATA_LOAD, func_line, py_file))
+
+        elif ((class_name == constants.BLOB_KW) and (func_name == constants.UPLOAD_FROM_FILENAME_KW)):
+            data_load_count += 1
+            print(constants.CONSOLE_STR_DISPLAY.format(constants.CONSOLE_STR_DATA_LOAD, func_line, py_file))
+
+        # skipping visdom logger mapping per original comments
+
+        elif ((class_name == constants.COCO_GT_KW) and (func_name == constants.LOADRES_KW)):
+            data_load_count += 1
+            print(constants.CONSOLE_STR_DISPLAY.format(constants.CONSOLE_STR_DATA_LOAD, func_line, py_file))
+
+        elif ((class_name == constants.YAML_KW) and (func_name == constants.LOAD_KW)):
+            data_load_count += 1
+            print(constants.CONSOLE_STR_DISPLAY.format(constants.CONSOLE_STR_DATA_LOAD, func_line, py_file))
+
+        elif ((class_name == constants.HUB_KW) and (func_name == constants.LOAD_KW)):
+            data_load_count += 1
+            print(constants.CONSOLE_STR_DISPLAY.format(constants.CONSOLE_STR_DATA_LOAD, func_line, py_file))
+
+        elif ((class_name == constants.DATA_LOADER_FACTORY_KW) and (func_name == constants.GET_DATA_LOADER_KW)):
+            data_load_count += 1
+            print(constants.CONSOLE_STR_DISPLAY.format(constants.CONSOLE_STR_DATA_LOAD, func_line, py_file))
+
+        elif ((class_name == constants.IO_KW) and (func_name == constants.READ_FILE_KW)):
+            data_load_count += 1
+            print(constants.CONSOLE_STR_DISPLAY.format(constants.CONSOLE_STR_DATA_LOAD, func_line, py_file))
+
+        elif ((class_name == constants.DATASET_KW) and (func_name == constants.TENSOR_SLICE_KW)):
+            data_load_count += 1
+            print(constants.CONSOLE_STR_DISPLAY.format(constants.CONSOLE_STR_DATA_LOAD, func_line, py_file))
+
+        elif ((class_name == constants.SP_MODEL_KW) and (func_name == constants.LOAD_CAPITAL_KW)):
+            data_load_count += 1
+            print(constants.CONSOLE_STR_DISPLAY.format(constants.CONSOLE_STR_DATA_LOAD, func_line, py_file))
+
+        elif ((class_name == constants.TAGGING_DATA_LOADER_KW) and (func_name == constants.LOAD_KW)):
+            data_load_count += 1
+            print(constants.CONSOLE_STR_DISPLAY.format(constants.CONSOLE_STR_DATA_LOAD, func_line, py_file))
+
+        elif ((class_name == constants.PD_KW) and (func_name == constants.READ_CSV_KW)):
+            data_load_count += 1
+            print(constants.CONSOLE_STR_DISPLAY.format(constants.CONSOLE_STR_DATA_LOAD, func_line, py_file))
+
+        elif ((class_name == constants.IBROSA_KW) and (func_name == constants.LOAD_KW)):
+            data_load_count += 1
+            print(constants.CONSOLE_STR_DISPLAY.format(constants.CONSOLE_STR_DATA_LOAD, func_line, py_file))
+
+        elif ((class_name == constants.DATA_UTILS_KW) and (func_name == constants.LOAD_CELEBA_KW)):
+            data_load_count += 1
+            print(constants.CONSOLE_STR_DISPLAY.format(constants.CONSOLE_STR_DATA_LOAD, func_line, py_file))
+
+        elif ((class_name == constants.DSET_KW) and (func_name == constants.MNIST_KW)):
+            data_load_count += 1
+            print(constants.CONSOLE_STR_DISPLAY.format(constants.CONSOLE_STR_DATA_LOAD, func_line, py_file))
+
+        elif ((class_name == constants.TARFILE_KW) and (func_name == constants.OPEN_KW)):
+            data_load_count += 1
+            print(constants.CONSOLE_STR_DISPLAY.format(constants.CONSOLE_STR_DATA_LOAD, func_line, py_file))
+
+        elif ((class_name == constants.AUDIO_KW) and (func_name == constants.LOAD_WAV_KW)):
+            data_load_count += 1
+            print(constants.CONSOLE_STR_DISPLAY.format(constants.CONSOLE_STR_DATA_LOAD, func_line, py_file))
+
+        elif ((class_name == constants.IMAGE_KW) and (func_name == constants.OPEN_KW)):
+            data_load_count += 1
+            print(constants.CONSOLE_STR_DISPLAY.format(constants.CONSOLE_STR_DATA_LOAD, func_line, py_file))
+
+        elif ((class_name == constants.REPLAY_BUFFER_KW) and (func_name == constants.LOAD_KW)):
+            data_load_count += 1
+            print(constants.CONSOLE_STR_DISPLAY.format(constants.CONSOLE_STR_DATA_LOAD, func_line, py_file))
+
+        elif ((class_name == constants.H5PY_KW) and (func_name == constants.FILE_KW)):
+            data_load_count += 1
+            print(constants.CONSOLE_STR_DISPLAY.format(constants.CONSOLE_STR_DATA_LOAD, func_line, py_file))
+
+    LOGGING_IS_ON_FLAG = py_parser.checkLoggingPerData(py_tree, constants.DUMMY_LOG_KW)
+
+    logger.info(
+        "getDataLoadCount finished",
+        extra={
+            "py_file": py_file,
+            "data_load_count": data_load_count,
+            "logging_present": LOGGING_IS_ON_FLAG,
+        },
+    )
+    return data_load_count
+
 def getDataLoadCountb( py_file ):
     data_load_countb = 0 
     py_tree = py_parser.getPythonParseObject(py_file)
@@ -213,54 +223,60 @@ def getDataLoadCountc( py_file ):
     return data_load_countc 
 
 
-def getModelLoadCounta( py_file ):
-    model_load_counta = 0 
+def getModelLoadCounta(py_file):
+    """
+    Count model-loading related API calls in a Python file.
+
+    Forensics logging:
+    - Logs when analysis starts and finishes.
+    - Logs the final count of detected model-load operations.
+    """
+    logger.info("getModelLoadCounta called", extra={"py_file": py_file})
+
+    model_load_counta = 0
     py_tree = py_parser.getPythonParseObject(py_file)
-    func_def_list  = py_parser.getPythonAtrributeFuncs( py_tree ) 
+    func_def_list = py_parser.getPythonAtrributeFuncs(py_tree)
     for def_ in func_def_list:
-        class_name, func_name, func_line, arg_call_list = def_ 
-        
-        if(( class_name == constants.DEEP_SPEECH_KW ) and (func_name == constants.LOAD_MODEL_PACKAGE_KW) ):
-            model_load_counta += 1 
-            print( constants.CONSOLE_STR_DISPLAY.format( constants.CONSOLE_STR_MODEL_LOAD, func_line , py_file  ) )
-        
-        elif(( class_name == constants.MODELS_KW ) and (func_name == constants.LOAD_MODEL_KW) ):
-            model_load_counta += 1 
-            print( constants.CONSOLE_STR_DISPLAY.format( constants.CONSOLE_STR_MODEL_LOAD, func_line , py_file  ) )
-            
-        elif(( class_name == constants.MODEL_KW ) and (func_name == constants.LOAD_STATE_DICT_KW) ):
-            model_load_counta += 1 
-            print( constants.CONSOLE_STR_DISPLAY.format( constants.CONSOLE_STR_MODEL_LOAD, func_line , py_file  ) )
-            
-        elif(( class_name == constants.NETWORK_KW ) and (func_name == constants.LOAD_NET_KW) ):
-            model_load_counta += 1 
-            print( constants.CONSOLE_STR_DISPLAY.format( constants.CONSOLE_STR_MODEL_LOAD, func_line , py_file  ) )
-            
-        elif(( class_name == constants.VGG_KW ) and (func_name == constants.LOAD_FROM_NPY_FILE_KW) ):
-            model_load_counta += 1 
-            print( constants.CONSOLE_STR_DISPLAY.format( constants.CONSOLE_STR_MODEL_LOAD, func_line , py_file  ) )
-            
-        elif(( class_name == constants.CAFFE_PARSER_KW ) and (func_name == constants.READ_CAFFE_MODEL_KW) ):
-            model_load_counta += 1 
-            print( constants.CONSOLE_STR_DISPLAY.format( constants.CONSOLE_STR_MODEL_LOAD, func_line , py_file  ) )
-            
-        # # skipping as per https://github.com/paser-group/MLForensics/blob/farzana/Verb.Object.Mapping.md     
-        # elif(( class_name == constants.TRAIN_KW ) and (func_name == constants.CHECK_POINT_KW) ):
-        #     model_load_counta += 1 
-            
-        # # skipping as per https://github.com/paser-group/MLForensics/blob/farzana/Verb.Object.Mapping.md     
-        # elif(( class_name == constants.TF_HUB_KW ) and (func_name == constants.LOAD_KW) ):
-        #     model_load_counta += 1 
-            
-        # # skipping as per https://github.com/paser-group/MLForensics/blob/farzana/Verb.Object.Mapping.md     
-        # elif(( class_name == constants.MISC_KW ) and (func_name == constants.IMRE_SIZE_KW) ):
-        #     model_load_counta += 1 
-            
-    LOGGING_IS_ON_FLAG = py_parser.checkLoggingPerData( py_tree, constants.DUMMY_LOG_KW )    
-    # print(LOGGING_IS_ON_FLAG, model_load_counta) 
-    return model_load_counta 
-    
-    
+        class_name, func_name, func_line, arg_call_list = def_
+
+        if ((class_name == constants.DEEP_SPEECH_KW) and (func_name == constants.LOAD_MODEL_PACKAGE_KW)):
+            model_load_counta += 1
+            print(constants.CONSOLE_STR_DISPLAY.format(constants.CONSOLE_STR_MODEL_LOAD, func_line, py_file))
+
+        elif ((class_name == constants.MODELS_KW) and (func_name == constants.LOAD_MODEL_KW)):
+            model_load_counta += 1
+            print(constants.CONSOLE_STR_DISPLAY.format(constants.CONSOLE_STR_MODEL_LOAD, func_line, py_file))
+
+        elif ((class_name == constants.MODEL_KW) and (func_name == constants.LOAD_STATE_DICT_KW)):
+            model_load_counta += 1
+            print(constants.CONSOLE_STR_DISPLAY.format(constants.CONSOLE_STR_MODEL_LOAD, func_line, py_file))
+
+        elif ((class_name == constants.NETWORK_KW) and (func_name == constants.LOAD_NET_KW)):
+            model_load_counta += 1
+            print(constants.CONSOLE_STR_DISPLAY.format(constants.CONSOLE_STR_MODEL_LOAD, func_line, py_file))
+
+        elif ((class_name == constants.VGG_KW) and (func_name == constants.LOAD_FROM_NPY_FILE_KW)):
+            model_load_counta += 1
+            print(constants.CONSOLE_STR_DISPLAY.format(constants.CONSOLE_STR_MODEL_LOAD, func_line, py_file))
+
+        elif ((class_name == constants.CAFFE_PARSER_KW) and (func_name == constants.READ_CAFFE_MODEL_KW)):
+            model_load_counta += 1
+            print(constants.CONSOLE_STR_DISPLAY.format(constants.CONSOLE_STR_MODEL_LOAD, func_line, py_file))
+
+        # skipped cases remain as in original code
+
+    LOGGING_IS_ON_FLAG = py_parser.checkLoggingPerData(py_tree, constants.DUMMY_LOG_KW)
+
+    logger.info(
+        "getModelLoadCounta finished",
+        extra={
+            "py_file": py_file,
+            "model_load_count": model_load_counta,
+            "logging_present": LOGGING_IS_ON_FLAG,
+        },
+    )
+    return model_load_counta
+
 def getModelLoadCountb( py_file ):
     model_load_countb = 0 
     py_tree = py_parser.getPythonParseObject(py_file)
@@ -588,29 +604,46 @@ def getDataPipelineCountd( py_file ):
 	return data_pipeline_countd
 	
 
-def getEnvironmentCount( py_file ):
-    environment_count = 0 
+def getEnvironmentCount(py_file):
+    """
+    Count environment/step related calls in a Python file.
+
+    Forensics logging:
+    - Logs when analysis starts and finishes.
+    - Logs the final count of environment-related calls.
+    """
+    logger.info("getEnvironmentCount called", extra={"py_file": py_file})
+
+    environment_count = 0
     py_tree = py_parser.getPythonParseObject(py_file)
-    func_def_list  = py_parser.getPythonAtrributeFuncs( py_tree ) 
+    func_def_list = py_parser.getPythonAtrributeFuncs(py_tree)
     for def_ in func_def_list:
-        class_name, func_name, func_line, arg_call_list = def_ 
-        
-        if(( class_name == constants.WRAPPED_ENV_KW ) and (func_name == constants.STEP_KW ) and (len(arg_call_list) > 0)):
-            environment_count += 1 
-            print( constants.CONSOLE_STR_DISPLAY.format( constants.CONSOLE_STR_REL_ENV, func_line , py_file  ) )
-            
-        elif(( class_name == constants.ENV_KW ) and (func_name == constants.STEP_KW ) and (len(arg_call_list) > 0)):
-            environment_count += 1 
-            print( constants.CONSOLE_STR_DISPLAY.format( constants.CONSOLE_STR_REL_ENV, func_line , py_file  ) )
-            
-        elif(( class_name == constants.GYM_KW ) and (func_name == constants.MAKE_KW ) and (len(arg_call_list) > 0)):
-            environment_count += 1 
-            print( constants.CONSOLE_STR_DISPLAY.format( constants.CONSOLE_STR_REL_ENV, func_line , py_file  ) )
-            
-    LOGGING_IS_ON_FLAG = py_parser.checkLoggingPerData( py_tree, constants.DUMMY_LOG_KW ) 
-    # print(LOGGING_IS_ON_FLAG, environment_count) 
-    return environment_count 
-	
+        class_name, func_name, func_line, arg_call_list = def_
+
+        if ((class_name == constants.WRAPPED_ENV_KW) and (func_name == constants.STEP_KW) and (len(arg_call_list) > 0)):
+            environment_count += 1
+            print(constants.CONSOLE_STR_DISPLAY.format(constants.CONSOLE_STR_REL_ENV, func_line, py_file))
+
+        elif ((class_name == constants.ENV_KW) and (func_name == constants.STEP_KW) and (len(arg_call_list) > 0)):
+            environment_count += 1
+            print(constants.CONSOLE_STR_DISPLAY.format(constants.CONSOLE_STR_REL_ENV, func_line, py_file))
+
+        elif ((class_name == constants.GYM_KW) and (func_name == constants.MAKE_KW) and (len(arg_call_list) > 0)):
+            environment_count += 1
+            print(constants.CONSOLE_STR_DISPLAY.format(constants.CONSOLE_STR_REL_ENV, func_line, py_file))
+
+    LOGGING_IS_ON_FLAG = py_parser.checkLoggingPerData(py_tree, constants.DUMMY_LOG_KW)
+
+    logger.info(
+        "getEnvironmentCount finished",
+        extra={
+            "py_file": py_file,
+            "environment_count": environment_count,
+            "logging_present": LOGGING_IS_ON_FLAG,
+        },
+    )
+    return environment_count
+
 
 def getEnvironmentCountb( py_file ):
 	environment_countb = 0 
