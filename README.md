@@ -1,4 +1,4 @@
 Team Name: forensicTeam-FALL2025-SQA
 
 Team members:
-Ahmed Elafandi and Ghaday Alsulaimani
+Ahmed Elafandi, Ghaday Alsulaimani, and Cora Baldwin
